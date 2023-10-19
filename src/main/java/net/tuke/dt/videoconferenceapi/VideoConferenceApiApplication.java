@@ -12,6 +12,7 @@ import java.util.List;
 public class VideoConferenceApiApplication {
 
 	//TODO: set security , JWT
+	//second commit
 	@Bean
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
