@@ -11,6 +11,7 @@ import java.util.List;
 @SpringBootApplication
 public class VideoConferenceApiApplication {
 
+	//TODO: set security , JWT
 	@Bean
 	public ModelMapper modelMapper(){
 		return new ModelMapper();
