@@ -31,6 +31,8 @@ public class User {
 
     private String surname;
 
+    private String tag;
+
     private String password;
 
     private String email;

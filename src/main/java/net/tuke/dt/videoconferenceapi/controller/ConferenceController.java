@@ -2,10 +2,10 @@ package net.tuke.dt.videoconferenceapi.controller;
 
 
 import net.tuke.dt.videoconferenceapi.dto.ConferenceDTO;
-import net.tuke.dt.videoconferenceapi.entity.Conference;
 import net.tuke.dt.videoconferenceapi.service.ConferenceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,8 +33,9 @@ public class ConferenceController {
         return new ResponseEntity<>(updatedConference ,HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{id}")
-    ResponseEntity<String> addParticipantToConference( @PathVariable(name = "id") Long id){
+    ResponseEntity<String> deleteConference( @PathVariable(name = "id") Long id){
         conferenceService.deleteConference(id);
         return new ResponseEntity<>("Conference successfully deleted" ,HttpStatus.OK);
     }
