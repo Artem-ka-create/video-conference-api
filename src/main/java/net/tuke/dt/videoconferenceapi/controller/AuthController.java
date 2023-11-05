@@ -1,5 +1,6 @@
 package net.tuke.dt.videoconferenceapi.controller;
 
+import net.tuke.dt.videoconferenceapi.playload.JWTAuthResponse;
 import net.tuke.dt.videoconferenceapi.playload.LoginDTO;
 import net.tuke.dt.videoconferenceapi.playload.RegisterDTO;
 import net.tuke.dt.videoconferenceapi.service.AuthService;
@@ -21,9 +22,12 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/login","/signin"})
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDto){
-        String response = authService.login(loginDto);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<JWTAuthResponse> login(@RequestBody LoginDTO loginDto){
+        String token = authService.login(loginDto);
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+
+        return ResponseEntity.ok(jwtAuthResponse);
     }
     @PostMapping(value = {"/register","/signup"})
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){

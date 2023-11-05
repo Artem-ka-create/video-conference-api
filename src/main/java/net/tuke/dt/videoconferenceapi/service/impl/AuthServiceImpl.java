@@ -9,6 +9,7 @@ import net.tuke.dt.videoconferenceapi.playload.RegisterDTO;
 import net.tuke.dt.videoconferenceapi.repository.ParticipantRepository;
 import net.tuke.dt.videoconferenceapi.repository.RoleRepository;
 import net.tuke.dt.videoconferenceapi.repository.UserRepository;
+import net.tuke.dt.videoconferenceapi.security.JwtTokenProvider;
 import net.tuke.dt.videoconferenceapi.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,12 +32,20 @@ public class AuthServiceImpl implements AuthService {
     private ParticipantRepository participantRepository;
     private PasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, ParticipantRepository participantRepository,PasswordEncoder passwordEncoder) {
+    private JwtTokenProvider jwtTokenProvider;
+
+    public AuthServiceImpl(JwtTokenProvider jwtTokenProvider,
+                           AuthenticationManager authenticationManager,
+                           UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           ParticipantRepository participantRepository,
+                           PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.participantRepository = participantRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 
@@ -47,7 +56,8 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "User Logged-in success";
+        String token = jwtTokenProvider.generateToken(authentication);
+        return token;
     }
 
     @Override
