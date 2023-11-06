@@ -1,7 +1,6 @@
 package net.tuke.dt.videoconferenceapi.service.impl;
 
 import net.tuke.dt.videoconferenceapi.dto.*;
-import net.tuke.dt.videoconferenceapi.entity.Conference;
 import net.tuke.dt.videoconferenceapi.entity.Participant;
 import net.tuke.dt.videoconferenceapi.entity.Room;
 import net.tuke.dt.videoconferenceapi.entity.User;
@@ -152,10 +151,10 @@ public class UserServiceImpl implements UserService {
         userDTO.setName(user.getName());
         userDTO.setSurname(user.getSurname());
         userDTO.setEmail(user.getEmail());
-        List<subUserRoomsDTO> subRooms = new ArrayList<>();
+        List<SubUserRoomsDTO> subRooms = new ArrayList<>();
         for (Room r: user.getRooms()) {
-            subUserRoomsDTO subroom =
-                    new subUserRoomsDTO(r.getId(), r.getName(),
+            SubUserRoomsDTO subroom =
+                    new SubUserRoomsDTO(r.getId(), r.getName(),
                             r.getOwnerId(), r.getColorTag(), r.getCreatedDate());
             subRooms.add(subroom);
         }

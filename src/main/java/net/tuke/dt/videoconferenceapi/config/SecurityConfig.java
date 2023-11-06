@@ -1,5 +1,7 @@
 package net.tuke.dt.videoconferenceapi.config;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import net.tuke.dt.videoconferenceapi.security.JwtAuthenticationEntryPoint;
 import net.tuke.dt.videoconferenceapi.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
+@SecurityScheme(
+        name = "Bearer Authentication",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class SecurityConfig {
 
     private UserDetailsService userDetailsService;
@@ -54,6 +62,8 @@ public class SecurityConfig {
 //                    auth.anyRequest().authenticated()
         auth.requestMatchers(HttpMethod.GET,"/api/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
 
             ).exceptionHandling(exception ->
