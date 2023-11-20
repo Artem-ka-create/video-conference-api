@@ -68,7 +68,8 @@ public class SecurityConfig  {
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
     http.csrf((csrf) -> csrf.disable()).authorizeHttpRequests((auth) ->
-        auth.requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+        auth
+//                .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()

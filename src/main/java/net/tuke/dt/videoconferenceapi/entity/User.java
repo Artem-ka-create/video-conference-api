@@ -51,6 +51,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "room_id", referencedColumnName = "id"))
     private List<Room> rooms;
 
+    @OneToOne(mappedBy = "user")
+    private RefreshToken refreshToken;
 
     public List<Room> deleteRoom(Room room){
         rooms = rooms.stream().filter( room1 ->

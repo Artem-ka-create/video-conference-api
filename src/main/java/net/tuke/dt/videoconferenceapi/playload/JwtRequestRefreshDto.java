@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+public class JwtRequestRefreshDto {
 
-public class JWTAuthResponse {
-    private String accessToken;
-    private String tokenType= "Bearer";
     private String refreshToken;
+
 }
