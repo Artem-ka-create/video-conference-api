@@ -122,11 +122,12 @@ public class RoomServiceImpl  implements RoomService {
         User usr = userRepository.findById(userId).orElseThrow(()->
                 new ResourceNotFoundException("User", "id", userId));
 
+//
         List<Room> rooms = usr.getRooms();
-
+//
         List<RoomDTO> roomsDTO = rooms.stream().map(r -> mapToDto(r)).collect(Collectors.toList());
 
-        return roomsDTO;
+        return new ArrayList<>();
     }
 
 

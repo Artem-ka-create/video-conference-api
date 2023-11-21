@@ -12,11 +12,19 @@ public class ResourceNotFoundException extends RuntimeException{
     private String fieldName;
     private long fielValue;
 
+    private String strValue;
+
     public ResourceNotFoundException(String resourceName, String fieldName, long fielValue) {
         super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fielValue));
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.fielValue = fielValue;
+    }
+    public ResourceNotFoundException(String resourceName, String fieldName, String fielValue) {
+        super(String.format("%s not found with %s : '%s'", resourceName, fieldName, fielValue));
+        this.resourceName = resourceName;
+        this.fieldName = fieldName;
+        this.strValue = fielValue;
     }
 
     public String getResourceName() {
@@ -29,5 +37,9 @@ public class ResourceNotFoundException extends RuntimeException{
 
     public long getFielValue() {
         return fielValue;
+    }
+
+    public String getStrValue() {
+        return strValue;
     }
 }

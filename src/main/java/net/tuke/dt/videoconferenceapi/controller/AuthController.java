@@ -34,24 +34,21 @@ public class AuthController {
             responseCode = "200",
             description = "HttpStatus 200 OK"
     )
-    @CrossOrigin
+
     @PostMapping(value = {"/login","/signin"})
     public ResponseEntity<LoginResponse> login(@RequestBody LoginDTO loginDto){
-        LoginResponse responseObj = authService.login(loginDto);
-//        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
-//        jwtAuthResponse.setAccessToken(token);
 
+        LoginResponse responseObj = authService.login(loginDto);
         return ResponseEntity.ok(responseObj);
     }
-
 
     @Operation(
             summary = "Register to application",
             description = "This endpoint is used to register to application using REST API."
     )
     @ApiResponse(
-            responseCode = "201",
-            description = "HttpStatus 201 CREATED"
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
     )
     @PostMapping(value = {"/register","/signup"})
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){
@@ -59,6 +56,14 @@ public class AuthController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Refresh JWT of user in application",
+            description = "This endpoint is used to refresh jwt of user to application using REST API."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
+    )
     @PostMapping("/refresh")
     public ResponseEntity<JWTAuthResponse> refreshJwt(@RequestBody JwtRequestRefreshDto refreshDto){
         return new ResponseEntity<>(refreshTokenService.refreshToken(refreshDto),HttpStatus.OK);

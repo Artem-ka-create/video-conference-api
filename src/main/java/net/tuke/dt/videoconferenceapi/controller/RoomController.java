@@ -132,5 +132,5 @@ public class RoomController {
         List<RoomDTO> roomList = roomService.getRoomsByUserId(userId);
         return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
-// TODO: SubParticipantEntity
+
 }

@@ -2,6 +2,7 @@ package net.tuke.dt.videoconferenceapi.service.impl;
 
 import net.tuke.dt.videoconferenceapi.entity.RefreshToken;
 import net.tuke.dt.videoconferenceapi.entity.User;
+import net.tuke.dt.videoconferenceapi.exception.ResourceNotFoundException;
 import net.tuke.dt.videoconferenceapi.playload.JWTAuthResponse;
 import net.tuke.dt.videoconferenceapi.playload.JwtRequestRefreshDto;
 import net.tuke.dt.videoconferenceapi.repository.RefreshTokenRepository;
@@ -9,9 +10,13 @@ import net.tuke.dt.videoconferenceapi.security.JwtTokenProvider;
 import net.tuke.dt.videoconferenceapi.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Ref;
 import java.time.ZoneId;
 
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,17 +34,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
 
+    @Transactional
     @Override
     public String createToken(User user) {
-        RefreshToken token = new RefreshToken();
 
-        token.setToken(UUID.randomUUID().toString());
-        token.setUser(user);
-        token.setExpiration(ZonedDateTime.now().plusMinutes(exp));
+        Optional<RefreshToken> foundToken = refreshTokenRepository.findRefreshTokenByUserEmail(user.getEmail());
 
-        var refreshToken = refreshTokenRepository.save(token);
-
-        return refreshToken.getToken();
+        return foundToken.isEmpty() ? mapRefreshToken(new RefreshToken(),user) :  foundToken.get().getToken();
     }
 
     @Override
@@ -70,6 +71,18 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private boolean isTokenExpired(ZonedDateTime expirationTime) {
         return expirationTime.isBefore(ZonedDateTime.now(ZoneId.systemDefault()));
     }
+
+    private String mapRefreshToken(RefreshToken refreshToken,User user){
+
+        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setUser(user);
+        refreshToken.setExpiration(ZonedDateTime.now().plusMinutes(exp));
+
+        RefreshToken savedToken = refreshTokenRepository.save(refreshToken);
+
+        return savedToken.getToken();
+    }
+
 
 }
 

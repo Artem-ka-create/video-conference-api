@@ -60,17 +60,11 @@ public class SecurityConfig  {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        corsConfiguration.setAllowedOrigins(List.of("*"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PUT","OPTIONS","PATCH", "DELETE"));
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setExposedHeaders(List.of("Authorization"));
-
-    http.csrf((csrf) -> csrf.disable()).authorizeHttpRequests((auth) ->
+    http.cors(cors-> cors.disable()).csrf((csrf) -> csrf.disable()).authorizeHttpRequests((auth) ->
         auth
-//                .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
+//                to allow all endpoints
+//                .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/auth/login").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
