@@ -10,4 +10,7 @@ import java.util.Set;
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findByUsers(User user);
+
+
+    List<Room> findRoomByOwnerId(Long userId);
 }

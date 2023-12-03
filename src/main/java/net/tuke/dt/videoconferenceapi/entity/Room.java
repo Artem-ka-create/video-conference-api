@@ -28,7 +28,7 @@ public class Room {
     @Column(nullable = false)
     private Long ownerId;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String colorTag;
 
     private Date createdDate;
