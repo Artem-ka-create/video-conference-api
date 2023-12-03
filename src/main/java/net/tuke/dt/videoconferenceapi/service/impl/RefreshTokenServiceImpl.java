@@ -62,6 +62,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return new JWTAuthResponse(jwt," Bearer" ,token.getToken());
     }
 
+    public String getRefreshTokenByUser(User user){
+
+        RefreshToken refreshToken= refreshTokenRepository.getRefreshTokenByUser(user).orElseThrow(() ->
+                new ResourceNotFoundException("RefreshToken", "userId", user.getId()));
+
+        return refreshToken.getToken();
+    }
+
 
     private void updateToken(RefreshToken token) {
         token.setExpiration(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(exp));

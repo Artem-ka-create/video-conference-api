@@ -8,4 +8,5 @@ public interface RefreshTokenService {
     String createToken(User user);
 
     JWTAuthResponse refreshToken(JwtRequestRefreshDto jwtRequestRefreshDto);
+    String getRefreshTokenByUser(User user);
 }

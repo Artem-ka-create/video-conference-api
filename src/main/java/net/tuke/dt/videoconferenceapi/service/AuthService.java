@@ -8,4 +8,5 @@ public interface AuthService {
     LoginResponse login(LoginDTO loginDto);
 
     String register(RegisterDTO registerDTO);
+    LoginResponse getUserCredentials(String jwt );
 }

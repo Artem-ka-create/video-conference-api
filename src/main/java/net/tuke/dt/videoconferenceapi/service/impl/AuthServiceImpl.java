@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -110,6 +111,29 @@ public class AuthServiceImpl implements AuthService {
         return "user registered successfully";
     }
 
+    @Override
+    @Transactional
+    public LoginResponse getUserCredentials(String jwt) {
+
+        if (StringUtils.hasText(jwt)&& jwt.startsWith("Bearer ")){
+            jwt =  jwt.substring(7, jwt.length());
+        }else{
+            return null;
+        }
+
+        User user = userRepository.findByEmail(jwtTokenProvider.getUsername(jwt)).orElseThrow(() ->
+                new ResourceNotFoundException("User", "usernameOrEmail", 123));
+
+        Participant participant = user.getParticipant();
+        String refreshToken = refreshTokenService.getRefreshTokenByUser(user);
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse(jwt,"Bearer",refreshToken);
+
+        return new LoginResponse( participant.getUsername(),user.getId() ,user.getName(),
+                user.getPassword(), user.getSurname(),user.getEmail(),
+                user.getRoles(),jwtAuthResponse);
+
+
+    }
 
 
 }
