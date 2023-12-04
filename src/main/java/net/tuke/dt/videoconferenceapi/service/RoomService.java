@@ -23,4 +23,6 @@ public interface RoomService {
 
 //    find by userId
     List<RoomDTO> getRoomsByUserId (Long userId);
+
+    String deleteUserFromRoom(Long roomId, Long userId);
 }

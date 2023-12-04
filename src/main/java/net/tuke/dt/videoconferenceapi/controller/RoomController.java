@@ -133,4 +133,22 @@ public class RoomController {
         return new ResponseEntity<>(roomList, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get all rooms",
+            description = "This endpoint is used to get all rooms from database using REST API."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PutMapping("{room-id}/users/{user-id}")
+    ResponseEntity<String> removeUserFromRoom(@PathVariable(name = "room-id") Long roomId , @PathVariable(name = "user-id") Long userId){
+        String responseMsg =roomService.deleteUserFromRoom(roomId,userId);
+        System.out.println(responseMsg);
+        return new ResponseEntity<>(responseMsg, HttpStatus.OK);
+    }
+
 }

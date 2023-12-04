@@ -11,6 +11,7 @@ import net.tuke.dt.videoconferenceapi.repository.RoomRepository;
 import net.tuke.dt.videoconferenceapi.repository.UserRepository;
 import net.tuke.dt.videoconferenceapi.service.RoomService;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,9 +125,34 @@ public class RoomServiceImpl  implements RoomService {
                 new ResourceNotFoundException("User", "id", userId));
 
         List<Room> rooms = roomRepository.findByUsers(usr);
-//
 
         return rooms.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public String deleteUserFromRoom(Long roomId, Long userId) {
+
+        Room room = roomRepository.findById(roomId).orElseThrow(()->
+                new ResourceNotFoundException("Room", "id", roomId));
+
+        User currentUser = userRepository.findById(userId).orElseThrow(()->
+                new ResourceNotFoundException("User", "id", userId));
+
+        List<User> userList = room.deleteUser(currentUser);
+        currentUser.deleteRoom(room);
+
+        if (userList.isEmpty()){
+            roomRepository.delete(room);
+            return "Room deleted";
+        }else {
+            room.setUsers(userList);
+
+            Room updatedRoom = roomRepository.save(room);
+            userRepository.save(currentUser);
+            return "User successfuly deleted";
+
+        }
     }
 
 
