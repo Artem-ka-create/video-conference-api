@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.tuke.dt.videoconferenceapi.dto.NewUserDTO;
 import net.tuke.dt.videoconferenceapi.dto.RoomDTO;
 import net.tuke.dt.videoconferenceapi.entity.Room;
 import net.tuke.dt.videoconferenceapi.service.RoomService;
@@ -134,8 +135,8 @@ public class RoomController {
     }
 
     @Operation(
-            summary = "Get all rooms",
-            description = "This endpoint is used to get all rooms from database using REST API."
+            summary = "Remove user from room",
+            description = "This endpoint is used to remove user from room  using REST API."
     )
     @ApiResponse(
             responseCode = "200",
@@ -150,5 +151,24 @@ public class RoomController {
         System.out.println(responseMsg);
         return new ResponseEntity<>(responseMsg, HttpStatus.OK);
     }
+
+
+    @Operation(
+            summary = "add user to room by email",
+            description = "This endpoint is used to add user to room by email using REST API."
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PutMapping("add-user")
+    ResponseEntity<NewUserDTO> addUserToRoomByEmail(@RequestBody NewUserDTO newUserdata){
+        NewUserDTO createdUserdto =roomService.addNewUserByEmail(newUserdata);
+        return new ResponseEntity<>(createdUserdto, HttpStatus.OK);
+    }
+
 
 }

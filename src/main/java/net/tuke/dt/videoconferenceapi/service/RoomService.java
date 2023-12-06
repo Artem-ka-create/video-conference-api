@@ -1,5 +1,6 @@
 package net.tuke.dt.videoconferenceapi.service;
 
+import net.tuke.dt.videoconferenceapi.dto.NewUserDTO;
 import net.tuke.dt.videoconferenceapi.dto.RoomDTO;
 
 import java.util.List;
@@ -25,4 +26,6 @@ public interface RoomService {
     List<RoomDTO> getRoomsByUserId (Long userId);
 
     String deleteUserFromRoom(Long roomId, Long userId);
+
+    NewUserDTO addNewUserByEmail(NewUserDTO newUserDTO);
 }

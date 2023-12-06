@@ -155,6 +155,27 @@ public class RoomServiceImpl  implements RoomService {
         }
     }
 
+    @Override
+    @Transactional
+    public NewUserDTO addNewUserByEmail(NewUserDTO newUserDTO) {
+
+        User usr = userRepository.findByEmail(newUserDTO.getNewUserEmail()).orElseThrow(()->
+                new ResourceNotFoundException("User", "id", newUserDTO.getNewUserEmail()));
+
+        Room room = roomRepository.findById(newUserDTO.getRoomId()).orElseThrow(()->
+                new ResourceNotFoundException("Room", "id", newUserDTO.getRoomId()));
+
+        usr.addRoom(room);
+        room.addUser(usr);
+
+        roomRepository.save(room);
+        userRepository.save(usr);
+
+
+
+        return new NewUserDTO(usr.getEmail(), usr.getId(),  room.getId(), newUserDTO.getInitiatorUserId());
+    }
+
 
     private RoomDTO mapToDto(Room room){
 
