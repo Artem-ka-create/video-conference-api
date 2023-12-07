@@ -165,9 +165,9 @@ public class RoomController {
             name = "Bearer Authentication"
     )
     @PutMapping("add-user")
-    ResponseEntity<NewUserDTO> addUserToRoomByEmail(@RequestBody NewUserDTO newUserdata){
-        NewUserDTO createdUserdto =roomService.addNewUserByEmail(newUserdata);
-        return new ResponseEntity<>(createdUserdto, HttpStatus.OK);
+    ResponseEntity<RoomDTO> addUserToRoomByEmail(@RequestBody NewUserDTO newUserdata){
+        RoomDTO updatedRoom =roomService.addNewUserByEmail(newUserdata);
+        return new ResponseEntity<>(updatedRoom, HttpStatus.OK);
     }
 
 

@@ -157,7 +157,7 @@ public class RoomServiceImpl  implements RoomService {
 
     @Override
     @Transactional
-    public NewUserDTO addNewUserByEmail(NewUserDTO newUserDTO) {
+    public RoomDTO addNewUserByEmail(NewUserDTO newUserDTO) {
 
         User usr = userRepository.findByEmail(newUserDTO.getNewUserEmail()).orElseThrow(()->
                 new ResourceNotFoundException("User", "id", newUserDTO.getNewUserEmail()));
@@ -168,12 +168,13 @@ public class RoomServiceImpl  implements RoomService {
         usr.addRoom(room);
         room.addUser(usr);
 
-        roomRepository.save(room);
+         Room savedRoom = roomRepository.save(room);
         userRepository.save(usr);
 
+        RoomDTO roomdto = mapToDto(savedRoom);
 
 
-        return new NewUserDTO(usr.getEmail(), usr.getId(),  room.getId(), newUserDTO.getInitiatorUserId());
+        return roomdto;
     }
 
 

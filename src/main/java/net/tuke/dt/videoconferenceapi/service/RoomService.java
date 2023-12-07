@@ -27,5 +27,5 @@ public interface RoomService {
 
     String deleteUserFromRoom(Long roomId, Long userId);
 
-    NewUserDTO addNewUserByEmail(NewUserDTO newUserDTO);
+    RoomDTO addNewUserByEmail(NewUserDTO newUserDTO);
 }
