@@ -1,6 +1,7 @@
 package net.tuke.dt.videoconferenceapi.service.impl;
 
 import net.tuke.dt.videoconferenceapi.dto.ConferenceDTO;
+import net.tuke.dt.videoconferenceapi.dto.JoinConferenceDTO;
 import net.tuke.dt.videoconferenceapi.dto.NewConferenceEventDTO;
 import net.tuke.dt.videoconferenceapi.entity.Conference;
 import net.tuke.dt.videoconferenceapi.entity.Participant;
@@ -85,6 +86,9 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     @Transactional
     public ConferenceDTO addNewConferenceEvent(NewConferenceEventDTO newConferenceData) {
+        if (conferenceRepository.findConferenceByConferenceNameAndCompletedDateNull(newConferenceData.getConferenceName()).isPresent()){
+            throw new RuntimeException("THis conference is running, you can join");
+        }
 
         Optional<Participant> participant = participantRepository
                 .findParticipantByUsername(newConferenceData.getParticipantName());
@@ -95,6 +99,33 @@ public class ConferenceServiceImpl implements ConferenceService {
                 initializeNewConferenceNewParticipant(newConferenceData);
 
         return mapToDto(createdConference);
+    }
+
+    @Override
+    @Transactional
+    public ConferenceDTO joinParticipantToConference(JoinConferenceDTO joinConferenceData) {
+
+        Conference conference = conferenceRepository
+                .findConferenceByConferenceNameAndCompletedDateNull(joinConferenceData.getConferenceName()).orElseThrow(()->
+                        new ResourceNotFoundException("Conference", "id", joinConferenceData.getConferenceName()));
+
+        Participant participant = new Participant();
+        if (joinConferenceData.getUserId()==null){
+
+            participant.setCreatedDate(new Date());
+            participant.setUsername(joinConferenceData.getUsername());
+
+        }else{
+            participant = participantRepository.findById(joinConferenceData.getUserId()).orElseThrow(()->
+                    new ResourceNotFoundException("Participant", "id", joinConferenceData.getUserId()));
+        }
+
+        participant.addConference(conference);
+        conference.addParticipant(participant);
+
+        participantRepository.save(participant);
+
+        return mapToDto(conferenceRepository.save(conference));
     }
 
     private Conference initializeNewConferenceNewParticipant(NewConferenceEventDTO newConferenceData) {

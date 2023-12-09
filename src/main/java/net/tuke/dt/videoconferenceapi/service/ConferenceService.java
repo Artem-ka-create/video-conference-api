@@ -1,6 +1,7 @@
 package net.tuke.dt.videoconferenceapi.service;
 
 import net.tuke.dt.videoconferenceapi.dto.ConferenceDTO;
+import net.tuke.dt.videoconferenceapi.dto.JoinConferenceDTO;
 import net.tuke.dt.videoconferenceapi.dto.NewConferenceEventDTO;
 import net.tuke.dt.videoconferenceapi.dto.ParticipantDTO;
 
@@ -16,5 +17,7 @@ public interface ConferenceService {
 
 
     ConferenceDTO addNewConferenceEvent(NewConferenceEventDTO newConferenceData);
+
+    ConferenceDTO joinParticipantToConference(JoinConferenceDTO joinConferenceData);
 
 }

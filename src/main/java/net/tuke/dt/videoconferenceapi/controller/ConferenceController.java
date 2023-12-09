@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.tuke.dt.videoconferenceapi.dto.ConferenceDTO;
+import net.tuke.dt.videoconferenceapi.dto.JoinConferenceDTO;
 import net.tuke.dt.videoconferenceapi.dto.NewConferenceEventDTO;
 import net.tuke.dt.videoconferenceapi.service.ConferenceService;
 import org.springframework.http.HttpStatus;
@@ -106,6 +107,24 @@ public class ConferenceController {
     @PostMapping("add-conference")
     ResponseEntity<ConferenceDTO> addConference( @RequestBody NewConferenceEventDTO newConferenceData){
         ConferenceDTO createdConference = conferenceService.addNewConferenceEvent(newConferenceData);
+        return new ResponseEntity<>(createdConference ,HttpStatus.OK);
+    }
+
+
+    @Operation(
+            summary = "Join participant to meeting",
+            description = "This endpoint is used to join participant to conference using REST API"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PutMapping("join-conference")
+    ResponseEntity<ConferenceDTO> joinToConference( @RequestBody JoinConferenceDTO joinConferenceData){
+        ConferenceDTO createdConference = conferenceService.joinParticipantToConference(joinConferenceData);
         return new ResponseEntity<>(createdConference ,HttpStatus.OK);
     }
 

@@ -5,8 +5,11 @@ import net.tuke.dt.videoconferenceapi.entity.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ConferenceRepository extends JpaRepository<Conference, Long> {
 
+    Optional<Conference> findConferenceByConferenceNameAndCompletedDateNull(String conferenceName);
+    Optional<Conference> findConferenceByConferenceName(String conferenceName);
 
 }
