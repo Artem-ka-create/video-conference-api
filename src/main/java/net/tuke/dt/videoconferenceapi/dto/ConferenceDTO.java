@@ -28,6 +28,17 @@ public class ConferenceDTO {
     @Schema(description = "date of completing conference")
     private Date completedDate;
 
+    @Schema(description = "video conference technology which is used for this meeting")
+    private String technology;
+
+    @Schema(description = "password of meeting atendee")
+    private String attendeePassword;
+
+    @Schema(description = "password of meeting moderator")
+    private String moderatorPassword;
+
+
+
     @Schema(description = "list if participants which where at conference")
     private List<ParticipantDTO> participants;
 

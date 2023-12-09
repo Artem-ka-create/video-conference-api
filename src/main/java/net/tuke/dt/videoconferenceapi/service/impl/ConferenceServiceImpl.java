@@ -1,8 +1,10 @@
 package net.tuke.dt.videoconferenceapi.service.impl;
 
 import net.tuke.dt.videoconferenceapi.dto.ConferenceDTO;
+import net.tuke.dt.videoconferenceapi.dto.NewConferenceEventDTO;
 import net.tuke.dt.videoconferenceapi.entity.Conference;
 import net.tuke.dt.videoconferenceapi.entity.Participant;
+import net.tuke.dt.videoconferenceapi.entity.User;
 import net.tuke.dt.videoconferenceapi.exception.ResourceNotFoundException;
 import net.tuke.dt.videoconferenceapi.repository.ConferenceRepository;
 import net.tuke.dt.videoconferenceapi.repository.ParticipantRepository;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ConferenceServiceImpl implements ConferenceService {
@@ -78,6 +81,59 @@ public class ConferenceServiceImpl implements ConferenceService {
         return mapToDto(conference);
 
     }
+
+    @Override
+    @Transactional
+    public ConferenceDTO addNewConferenceEvent(NewConferenceEventDTO newConferenceData) {
+
+        Optional<Participant> participant = participantRepository
+                .findParticipantByUsername(newConferenceData.getParticipantName());
+
+        Conference createdConference =
+                participant.isPresent() && participant.get().getUser()!=null?
+                initializeConferenceWithExistingParticipant(participant.get(), newConferenceData):
+                initializeNewConferenceNewParticipant(newConferenceData);
+
+        return mapToDto(createdConference);
+    }
+
+    private Conference initializeNewConferenceNewParticipant(NewConferenceEventDTO newConferenceData) {
+
+        Participant part = new Participant();
+        part.setUsername(newConferenceData.getParticipantName());
+        part.setCreatedDate(new Date());
+
+        Conference conference = new Conference();
+        conference.setConferenceName(newConferenceData.getConferenceName());
+        conference.setAttendeePassword(newConferenceData.getAttendeePassword());
+        conference.setTechnology(newConferenceData.getTechnology());
+        conference.setModeratorPassword(newConferenceData.getModeratorPassword());
+        conference.setCreatedDate(new Date());
+
+        part.addConference(conference);
+        conference.addParticipant(part);
+
+        participantRepository.save(part);
+
+        return conferenceRepository.save(conference);
+    }
+    private Conference initializeConferenceWithExistingParticipant(Participant participant, NewConferenceEventDTO newConferenceData){
+
+        Conference conference = new Conference();
+        conference.setConferenceName(newConferenceData.getConferenceName());
+        conference.setAttendeePassword(newConferenceData.getAttendeePassword());
+        conference.setTechnology(newConferenceData.getTechnology());
+        conference.setModeratorPassword(newConferenceData.getModeratorPassword());
+        conference.addParticipant(participant);
+        conference.setCreatedDate(new Date());
+
+        participant.addConference(conference);
+
+        participantRepository.save(participant);
+
+        return conferenceRepository.save(conference);
+    }
+
 
 
     private ConferenceDTO mapToDto(Conference conference){

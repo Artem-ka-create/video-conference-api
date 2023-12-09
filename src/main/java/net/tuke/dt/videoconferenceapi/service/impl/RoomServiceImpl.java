@@ -209,7 +209,7 @@ public class RoomServiceImpl  implements RoomService {
             }
             ConferenceDTO subconf =
                     new ConferenceDTO(conf.getId(), conf.getConferenceName(),
-                            conf.getCreatedDate(), conf.getCompletedDate(), participants);
+                            conf.getCreatedDate(), conf.getCompletedDate(), conf.getTechnology(),conf.getAttendeePassword(),conf.getModeratorPassword() ,participants);
             conferences.add(subconf);
         }
         roomDTO.setConferences(conferences);

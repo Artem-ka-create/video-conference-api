@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -32,9 +33,15 @@ public class Conference {
     @Column(nullable = true, unique = false)
     private Date completedDate;
 
+    private String technology;
+
+    private String attendeePassword;
+
+    private String moderatorPassword;
+
 //    @Column(nullable = true, unique = false)
     @ManyToMany(mappedBy = "conferences")
-    private List<Participant> participants;
+    private List<Participant> participants = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")

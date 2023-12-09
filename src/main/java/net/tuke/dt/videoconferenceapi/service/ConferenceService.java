@@ -1,6 +1,7 @@
 package net.tuke.dt.videoconferenceapi.service;
 
 import net.tuke.dt.videoconferenceapi.dto.ConferenceDTO;
+import net.tuke.dt.videoconferenceapi.dto.NewConferenceEventDTO;
 import net.tuke.dt.videoconferenceapi.dto.ParticipantDTO;
 
 public interface ConferenceService {
@@ -12,5 +13,8 @@ public interface ConferenceService {
     void deleteConference(Long id);
 
     ConferenceDTO findConferenceById(Long id);
+
+
+    ConferenceDTO addNewConferenceEvent(NewConferenceEventDTO newConferenceData);
 
 }

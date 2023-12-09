@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class Participant {
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(name = "participants_conferences", joinColumns = @JoinColumn(name = "participant_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "conference_id", referencedColumnName = "id"))
-    private List<Conference> conferences;
+    private List<Conference> conferences = new ArrayList<>();
 
     public List<Conference> addConference(Conference conf){
         conferences.add(conf);
