@@ -93,8 +93,8 @@ public class ConferenceController {
     }
 
     @Operation(
-            summary = "Add participant to conference",
-            description = "This endpoint is used to add participant to conference, I using REST API"
+            summary = "Create meeting with participant",
+            description = "This endpoint is used to create meeting with participant using REST API"
     )
     @ApiResponse(
             responseCode = "200",
