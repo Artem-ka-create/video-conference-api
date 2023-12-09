@@ -20,4 +20,6 @@ public interface ConferenceService {
 
     ConferenceDTO joinParticipantToConference(JoinConferenceDTO joinConferenceData);
 
+    ConferenceDTO finishConference(String conferenceName);
+
 }

@@ -128,6 +128,23 @@ public class ConferenceController {
         return new ResponseEntity<>(createdConference ,HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "finish conference",
+            description = "This endpoint is used to finish conference using REST API"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PutMapping("close-conference/{conferenceName}")
+    ResponseEntity<ConferenceDTO> finishConference(  @PathVariable(name = "conferenceName") String conferenceName){
+        ConferenceDTO createdConference = conferenceService.finishConference(conferenceName);
+        return new ResponseEntity<>(createdConference ,HttpStatus.OK);
+    }
+
 
 
 }

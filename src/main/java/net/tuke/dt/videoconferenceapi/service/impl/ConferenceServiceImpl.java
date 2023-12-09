@@ -128,6 +128,18 @@ public class ConferenceServiceImpl implements ConferenceService {
         return mapToDto(conferenceRepository.save(conference));
     }
 
+    @Override
+    public ConferenceDTO finishConference(String conferenceName) {
+        Conference conference = conferenceRepository
+                .findConferenceByConferenceNameAndCompletedDateNull(conferenceName).orElseThrow(()->
+                        new ResourceNotFoundException("Conference", "id", conferenceName));
+
+        conference.setCompletedDate(new Date());
+
+        return mapToDto(conferenceRepository.save(conference));
+
+    }
+
     private Conference initializeNewConferenceNewParticipant(NewConferenceEventDTO newConferenceData) {
 
         Participant part = new Participant();
