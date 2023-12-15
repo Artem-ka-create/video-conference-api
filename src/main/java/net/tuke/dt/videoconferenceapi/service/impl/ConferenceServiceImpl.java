@@ -107,7 +107,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
         Conference conference = conferenceRepository
                 .findConferenceByConferenceNameAndCompletedDateNull(joinConferenceData.getConferenceName()).orElseThrow(()->
-                        new ResourceNotFoundException("Conference", "id", joinConferenceData.getConferenceName()));
+                        new ResourceNotFoundException("Conference", "name", joinConferenceData.getConferenceName()));
 
         Participant participant = new Participant();
         if (joinConferenceData.getUserId()==null){
