@@ -28,4 +28,6 @@ public interface RoomService {
     String deleteUserFromRoom(Long roomId, Long userId);
 
     RoomDTO addNewUserByEmail(NewUserDTO newUserDTO);
+
+    RoomDTO createMeetingInRoom (Long roomId, Long userId,String technologyName);
 }

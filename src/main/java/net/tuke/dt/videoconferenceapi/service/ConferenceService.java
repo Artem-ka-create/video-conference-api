@@ -22,4 +22,5 @@ public interface ConferenceService {
 
     ConferenceDTO finishConference(String conferenceName);
 
+
 }

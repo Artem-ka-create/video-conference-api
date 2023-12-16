@@ -130,11 +130,14 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     @Override
     public ConferenceDTO finishConference(String conferenceName) {
+        System.out.println("Finish this meeting -> " + conferenceName);
         Conference conference = conferenceRepository
                 .findConferenceByConferenceNameAndCompletedDateNull(conferenceName).orElseThrow(()->
                         new ResourceNotFoundException("Conference", "id", conferenceName));
 
         conference.setCompletedDate(new Date());
+
+        System.out.println(conference.getCompletedDate());
 
         return mapToDto(conferenceRepository.save(conference));
 

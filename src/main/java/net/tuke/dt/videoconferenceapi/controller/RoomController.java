@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import net.tuke.dt.videoconferenceapi.dto.ConferenceDTO;
+import net.tuke.dt.videoconferenceapi.dto.NewConferenceEventDTO;
 import net.tuke.dt.videoconferenceapi.dto.NewUserDTO;
 import net.tuke.dt.videoconferenceapi.dto.RoomDTO;
 import net.tuke.dt.videoconferenceapi.entity.Room;
@@ -168,6 +170,27 @@ public class RoomController {
     ResponseEntity<RoomDTO> addUserToRoomByEmail(@RequestBody NewUserDTO newUserdata){
         RoomDTO updatedRoom =roomService.addNewUserByEmail(newUserdata);
         return new ResponseEntity<>(updatedRoom, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Create meeting with participant in room",
+            description = "This endpoint is used to create meeting with participant in room using REST API"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PutMapping("{roomId}/users/{userId}/technologies/{technologyName}/add-conference")
+    ResponseEntity<RoomDTO> addConferenceToRoom(
+            @PathVariable(name = "roomId") Long roomId,
+            @PathVariable(name = "userId") Long userId,
+            @PathVariable(name="technologyName") String technologyName){
+
+        RoomDTO updatedRoom = roomService.createMeetingInRoom(roomId,userId,technologyName);
+        return new ResponseEntity<>(updatedRoom ,HttpStatus.OK);
     }
 
 

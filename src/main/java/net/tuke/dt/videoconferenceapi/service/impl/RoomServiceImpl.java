@@ -7,6 +7,7 @@ import net.tuke.dt.videoconferenceapi.entity.Room;
 import net.tuke.dt.videoconferenceapi.entity.User;
 import net.tuke.dt.videoconferenceapi.exception.ResourceNotFoundException;
 import net.tuke.dt.videoconferenceapi.repository.ConferenceRepository;
+import net.tuke.dt.videoconferenceapi.repository.ParticipantRepository;
 import net.tuke.dt.videoconferenceapi.repository.RoomRepository;
 import net.tuke.dt.videoconferenceapi.repository.UserRepository;
 import net.tuke.dt.videoconferenceapi.service.RoomService;
@@ -23,14 +24,18 @@ public class RoomServiceImpl  implements RoomService {
 
     private RoomRepository roomRepository;
     private UserRepository userRepository;
+    private ParticipantRepository participantRepository;
     private ConferenceRepository conferenceRepository;
     private ModelMapper modelMapper;
 
-    public RoomServiceImpl(RoomRepository roomRepository,ConferenceRepository conferenceRepository, ModelMapper modelMapper, UserRepository userRepository) {
+
+
+    public RoomServiceImpl(RoomRepository roomRepository,ConferenceRepository conferenceRepository, ModelMapper modelMapper, UserRepository userRepository,ParticipantRepository participantRepository) {
         this.roomRepository = roomRepository;
         this.modelMapper = modelMapper;
         this.userRepository=userRepository;
         this.conferenceRepository=conferenceRepository;
+        this.participantRepository = participantRepository;
     }
 
 
@@ -175,6 +180,52 @@ public class RoomServiceImpl  implements RoomService {
 
 
         return roomdto;
+    }
+
+    @Override
+    @Transactional
+    public RoomDTO createMeetingInRoom(Long roomId, Long userId,String technologyName) {
+
+
+
+        User usr = userRepository.findById(userId).orElseThrow(()->
+                new ResourceNotFoundException("User", "id", userId));
+
+        Participant participant = participantRepository.findById(usr.getParticipant().getId()).orElseThrow(()->
+                new ResourceNotFoundException("User", "id", userId));
+
+        Room room = roomRepository.findById(roomId).orElseThrow(()->
+                new ResourceNotFoundException("Room", "id", roomId));
+
+        boolean roomStartedStatus = conferenceRepository.findConferenceByConferenceNameAndCompletedDateNull(room.getName()).isPresent();
+
+        if (!roomStartedStatus){
+
+            Conference conference = new Conference();
+
+            conference.setConferenceName(room.getName());
+            conference.setCreatedDate(new Date());
+    //        TODO : BBB credentials
+            conference.setModeratorPassword("123");
+            conference.setAttendeePassword("1234");
+            conference.setTechnology(technologyName);
+
+            participant.addConference(conference);
+            conference.addParticipant(participant);
+
+            conference.setRoom(room);
+
+            participantRepository.save(participant);
+            conferenceRepository.save(conference);
+
+            Room updatedRoom = roomRepository.findById(roomId).orElseThrow(()->
+                    new ResourceNotFoundException("Room", "id", roomId));
+
+            return mapToDto(updatedRoom);
+        }
+        else{
+            throw new RuntimeException("This room is running, join to conversation");
+        }
     }
 
 

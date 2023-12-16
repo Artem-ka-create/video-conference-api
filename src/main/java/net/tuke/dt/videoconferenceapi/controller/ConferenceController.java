@@ -110,7 +110,6 @@ public class ConferenceController {
         return new ResponseEntity<>(createdConference ,HttpStatus.OK);
     }
 
-
     @Operation(
             summary = "Join participant to meeting",
             description = "This endpoint is used to join participant to conference using REST API"
