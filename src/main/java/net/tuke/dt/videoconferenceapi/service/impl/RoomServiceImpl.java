@@ -54,7 +54,7 @@ public class RoomServiceImpl  implements RoomService {
         System.out.println(room);
         Room savedRoom = roomRepository.save(room);
         user.addRoom(savedRoom);
-        User updateduser = userRepository.save(user);
+        userRepository.save(user);
 
 
         return mapToDto(savedRoom);
@@ -111,15 +111,21 @@ public class RoomServiceImpl  implements RoomService {
 //        Room updatedRoom = roomRepository.save(room);
         List<User> usrs= room.getUsers();
 
+        List<Conference> confs = room.getConferences();
         usrs.stream().forEach(e -> {
             e.deleteRoom(room);
             userRepository.save(e);
         });
+        confs.stream().forEach(e->{
+            e.setRoom(null);
+            conferenceRepository.save(e);
+        });
+
+        room.setConferences(new ArrayList<>());
         room.setUsers(new ArrayList<>());
+        Room updatedRoom = roomRepository.save(room);
 
-        roomRepository.delete(room);
-
-
+        roomRepository.delete(updatedRoom);
     }
 
     @Override
@@ -146,18 +152,18 @@ public class RoomServiceImpl  implements RoomService {
 
         List<User> userList = room.deleteUser(currentUser);
         currentUser.deleteRoom(room);
-
-        if (userList.isEmpty()){
-            roomRepository.delete(room);
-            return "Room deleted";
-        }else {
+//
+//        if (userList.isEmpty()){
+//            roomRepository.delete(room);
+//            return "Room deleted";
+////        }else {
             room.setUsers(userList);
 
             Room updatedRoom = roomRepository.save(room);
             userRepository.save(currentUser);
             return "User successfuly deleted";
 
-        }
+//        }
     }
 
     @Override
@@ -169,6 +175,10 @@ public class RoomServiceImpl  implements RoomService {
 
         Room room = roomRepository.findById(newUserDTO.getRoomId()).orElseThrow(()->
                 new ResourceNotFoundException("Room", "id", newUserDTO.getRoomId()));
+
+        if (room.getUsers().contains(usr)){
+            throw new RuntimeException("This user already exists in room , you cannot add him");
+        }
 
         usr.addRoom(room);
         room.addUser(usr);

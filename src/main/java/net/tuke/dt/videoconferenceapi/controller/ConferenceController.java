@@ -126,6 +126,22 @@ public class ConferenceController {
         ConferenceDTO createdConference = conferenceService.joinParticipantToConference(joinConferenceData);
         return new ResponseEntity<>(createdConference ,HttpStatus.OK);
     }
+    @Operation(
+            summary = "Join participant to meeting in room",
+            description = "This endpoint is used to join participant to conference in room using REST API"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HttpStatus 200 OK"
+    )
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    @PutMapping("/rooms/{roomId}/join-conference")
+    ResponseEntity<ConferenceDTO> joinToConferenceRoom( @PathVariable(name = "roomId") Long roomId, @RequestBody JoinConferenceDTO joinConferenceData){
+        ConferenceDTO createdConference = conferenceService.joinParticipantToConference(joinConferenceData);
+        return new ResponseEntity<>(createdConference ,HttpStatus.OK);
+    }
 
     @Operation(
             summary = "finish conference",

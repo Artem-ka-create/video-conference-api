@@ -19,6 +19,7 @@ public interface ConferenceService {
     ConferenceDTO addNewConferenceEvent(NewConferenceEventDTO newConferenceData);
 
     ConferenceDTO joinParticipantToConference(JoinConferenceDTO joinConferenceData);
+    ConferenceDTO joinParticipantToRoomConference(Long roomId, JoinConferenceDTO joinConferenceData);
 
     ConferenceDTO finishConference(String conferenceName);
 

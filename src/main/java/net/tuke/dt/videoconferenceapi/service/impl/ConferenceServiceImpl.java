@@ -5,10 +5,12 @@ import net.tuke.dt.videoconferenceapi.dto.JoinConferenceDTO;
 import net.tuke.dt.videoconferenceapi.dto.NewConferenceEventDTO;
 import net.tuke.dt.videoconferenceapi.entity.Conference;
 import net.tuke.dt.videoconferenceapi.entity.Participant;
+import net.tuke.dt.videoconferenceapi.entity.Room;
 import net.tuke.dt.videoconferenceapi.entity.User;
 import net.tuke.dt.videoconferenceapi.exception.ResourceNotFoundException;
 import net.tuke.dt.videoconferenceapi.repository.ConferenceRepository;
 import net.tuke.dt.videoconferenceapi.repository.ParticipantRepository;
+import net.tuke.dt.videoconferenceapi.repository.RoomRepository;
 import net.tuke.dt.videoconferenceapi.service.ConferenceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,15 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     private ConferenceRepository conferenceRepository;
     private ParticipantRepository participantRepository;
+
+    private RoomRepository roomRepository;
     private ModelMapper modelMapper;
 
-    public ConferenceServiceImpl(ParticipantRepository participantRepository,ConferenceRepository conferenceRepository, ModelMapper modelMapper) {
+    public ConferenceServiceImpl(ParticipantRepository participantRepository,ConferenceRepository conferenceRepository,RoomRepository roomRepository, ModelMapper modelMapper) {
         this.conferenceRepository = conferenceRepository;
         this.modelMapper = modelMapper;
         this.participantRepository = participantRepository;
+        this.roomRepository = roomRepository;
     }
 
     @Override
@@ -86,9 +91,16 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Override
     @Transactional
     public ConferenceDTO addNewConferenceEvent(NewConferenceEventDTO newConferenceData) {
-        if (conferenceRepository.findConferenceByConferenceNameAndCompletedDateNull(newConferenceData.getConferenceName()).isPresent()){
+        Optional<Conference> conference = conferenceRepository
+                .findConferenceByConferenceNameAndCompletedDateNull(newConferenceData.getConferenceName());
+        if (conference.isPresent()){
             throw new RuntimeException("THis conference is running, you can join");
         }
+
+        if (!roomRepository.findRoomByName(newConferenceData.getConferenceName()).isEmpty()){
+            throw new RuntimeException("Room with this conference name exists");
+        }
+
 
         Optional<Participant> participant = participantRepository
                 .findParticipantByUsername(newConferenceData.getParticipantName());
@@ -126,6 +138,11 @@ public class ConferenceServiceImpl implements ConferenceService {
         participantRepository.save(participant);
 
         return mapToDto(conferenceRepository.save(conference));
+    }
+
+    @Override
+    public ConferenceDTO joinParticipantToRoomConference(Long roomId, JoinConferenceDTO joinConferenceData) {
+        return null;
     }
 
     @Override
