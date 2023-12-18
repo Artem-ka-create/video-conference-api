@@ -101,16 +101,18 @@ public class ConferenceServiceImpl implements ConferenceService {
             throw new RuntimeException("Room with this conference name exists");
         }
 
+        if (newConferenceData.getUserId()!=null){
 
-        Optional<Participant> participant = participantRepository
-                .findParticipantByUsername(newConferenceData.getParticipantName());
+            Optional<Participant> participant = participantRepository
+                .findParticipantByUsernameAndUserId(newConferenceData.getParticipantName(),newConferenceData.getUserId());
 
-        Conference createdConference =
-                participant.isPresent() && participant.get().getUser()!=null?
-                initializeConferenceWithExistingParticipant(participant.get(), newConferenceData):
-                initializeNewConferenceNewParticipant(newConferenceData);
-
-        return mapToDto(createdConference);
+            return mapToDto(
+                    participant.isPresent() && participant.get().getUser()!=null?
+                            initializeConferenceWithExistingParticipant(participant.get(), newConferenceData):
+                            initializeNewConferenceNewParticipant(newConferenceData));
+        }else{
+           return mapToDto(initializeNewConferenceNewParticipant(newConferenceData));
+        }
     }
 
     @Override

@@ -17,6 +17,7 @@ public class NewConferenceEventDTO {
     private String technology;
     private String attendeePassword;
     private String moderatorPassword;
+    private Long userId;
 
 
 }
