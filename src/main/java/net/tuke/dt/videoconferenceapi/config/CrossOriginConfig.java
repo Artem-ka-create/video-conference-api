@@ -16,7 +16,7 @@ public class CrossOriginConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry
                         .addMapping("/**")
-                        .allowedOrigins("http://localhost:3000", "https://3370-2001-9e8-98e0-b800-d13f-95cd-ba30-f734.ngrok-free.app","http://172.20.10.2:3000")
+                        .allowedOrigins("http://localhost:3000", "https://b2c0-2001-9e8-98e0-b800-d13f-95cd-ba30-f734.ngrok-free.app","http://172.20.10.2:3000")
                         .allowedHeaders("*")
                         .allowCredentials(true)
                         .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
