@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y git maven && rm -rf /var/lib/apt/lists/
 WORKDIR /blog
 
 # Clone the project from GitHub
-RUN git clone https://github.com/Artem-ka-create/video-conference-api.git .
+RUN git clone ${REPO_URL} .
 
 # Build the project using Maven
 RUN mvn clean install -DskipTests
